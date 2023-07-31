@@ -1,37 +1,35 @@
 package teamgrouping.database;
 
-// MODULE import
 import org.apache.commons.dbcp2.BasicDataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-// DATABASE CONNECTION POOL setting
 public class dbcp {
+    /* datasource 생성 */
+    public static BasicDataSource MakeDataSource(String url, String username, String password) {
+        // 변수 초기화
+        BasicDataSource dataSource = new BasicDataSource();
 
-    // assume DATABASE is MYSQL on docker container
-    // make DATASOURCE
-    public static void MakeDataSource(String url, String username, String password) {
-        BasicDataSource dataSource;
-
-        datasource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        // 변수 내부값 설정
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
+        // 반환
         return dataSource;
     }
 
-    // set DATASOURCE
-    public static void SetDataSource(int MaxTotal, int MaxIdle, int MinIdle, int MaxWaitMillis) {
+    /* datasource 특성치 설정 */
+    public static void SetDataSource(BasicDataSource dataSource, int MaxTotal, int InitialSize, int MinIdle) {
         dataSource.setMaxTotal(MaxTotal); // MAX CONNECTIONS COUNT
-        dataSource.setMaxIdle(MaxIdle); // MAX MAINTAIN CONNECTIONS COUNT
+        dataSource.setInitialSize(InitialSize);
+        // dataSource.setMaxIdle(MaxIdle); // MAX MAINTAIN CONNECTIONS COUNT
         dataSource.setMinIdle(MinIdle); // MIN MAINTAIN CONNECTIONS COUNT
-        dataSource.setMaxWaitMillis(MaxWaitMillis); // MAX TRIAL MILLISECONDS to get CONNECTION
+        // dataSource.setMaxWaitMillis(MaxWaitMillis); // MAX TRIAL MILLISECONDS to get CONNECTION
     }
 
-    // get CONNECTION
-    public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
+    /* datasource connection 반환 */
+    // public static Connection getConnection(BasicDataSource dataSource) throws SQLException {
+    //     return dataSource.getConnection();
+    // }
 
 }
